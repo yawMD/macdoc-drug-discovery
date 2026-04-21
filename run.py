@@ -28,6 +28,25 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 
+
+def load_dotenv(env_path):
+    """Load environment variables from a .env file (no external deps)."""
+    if not env_path.exists():
+        return
+    for line in env_path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and value and key not in os.environ:
+            os.environ[key] = value
+
+
+# Load .env before importing anthropic (which reads the API key at init)
+load_dotenv(Path(__file__).parent / ".env")
+
 from anthropic import Anthropic
 
 from prepare import (

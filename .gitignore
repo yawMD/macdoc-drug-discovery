@@ -1,7 +1,10 @@
 __pycache__/
 *.py[oc]
 .venv/
+.env
 results.tsv
+history.jsonl
+best.smi
 run.log
 *.pdbqt
 *.sdf
