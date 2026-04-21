@@ -1,0 +1,40 @@
+# ============================================================================
+# MacDock — Target Configuration
+# By Emmanuel MacDan
+# ============================================================================
+# Change this file to target a different disease/protein.
+# The agent must NOT modify this file.
+
+target:
+  name: "SARS-CoV-2 Main Protease (Mpro)"
+  pdb_id: "6LU7"
+  chain: "A"
+  # Active site coordinates (from co-crystallized inhibitor N3 in 6LU7)
+  binding_site:
+    center_x: -10.8
+    center_y: 17.3
+    center_z: 68.8
+    size_x: 22.0
+    size_y: 22.0
+    size_z: 22.0
+
+starting_molecule:
+  name: "nirmatrelvir"
+  # Nirmatrelvir (Paxlovid active ingredient) — known Mpro inhibitor
+  smiles: "CC1(C2C1C(N(C2)C(=O)C(F)(F)F)C(=O)NC(CC3CCNC3=O)C#N)C"
+
+docking:
+  exhaustiveness: 8
+  num_modes: 5
+  energy_range: 3.0
+  seed: 42
+  timeout_seconds: 180
+
+scoring:
+  weights:
+    binding_affinity: 0.40
+    drug_likeness: 0.20
+    toxicity: 0.20
+    synthesizability: 0.20
+
+cache_dir: "~/.cache/macdock"

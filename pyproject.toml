@@ -1,0 +1,21 @@
+[project]
+name = "macdock"
+version = "0.1.0"
+description = "MacDock — Autonomous drug discovery by Emmanuel MacDan"
+authors = [{name = "Emmanuel MacDan"}]
+requires-python = ">=3.11"
+dependencies = [
+    "rdkit>=2024.3.1",
+    "meeko>=0.6.0",
+    "biopython>=1.84",
+    "numpy>=1.26",
+    "pyyaml>=6.0",
+    "requests>=2.32",
+]
+
+# Note on docking backends:
+# AutoDock Vina Python bindings (pip install vina) require:
+#   brew install boost swig
+# If vina fails to install, the framework falls back to
+# RDKit shape-based scoring (less accurate but keeps the loop running).
+# Alternatively install via conda: conda install -c conda-forge autodock-vina
