@@ -118,9 +118,12 @@ Each molecule takes **~2-3 seconds** on a MacBook. An AI agent following `progra
 macdock/
 ├── config.yaml      ← Target protein config (swap to change disease)
 ├── prepare.py       ← Protein download, docking engine, scoring (FIXED)
-├── molecule.py      ← SMILES string the agent modifies (ONLY EDITABLE FILE)
-├── program.md       ← Instructions for the autonomous AI agent
+├── molecule.py      ← SMILES string, single-molecule evaluation
+├── run.py           ← Fully autonomous AI-driven loop (Claude API)
+├── program.md       ← Instructions for external AI agents
 ├── results.tsv      ← Experiment log (every trial with scores)
+├── best.smi         ← Current best molecule (auto-updated)
+├── history.jsonl    ← Full experiment history
 └── pyproject.toml   ← Dependencies
 ```
 
@@ -139,9 +142,21 @@ uv run prepare.py
 # Test baseline molecule (nirmatrelvir / Paxlovid)
 uv run molecule.py
 
-# Run autonomous agent — point Claude Code or any coding agent at program.md
-claude "Read program.md and start the autonomous drug discovery loop. Keep iterating."
+# Run the FULLY AUTONOMOUS loop (AI agent drives itself via Claude API)
+export ANTHROPIC_API_KEY=sk-ant-...
+uv run run.py                    # Run indefinitely
+uv run run.py --max 100          # Run 100 experiments
+uv run run.py --model claude-haiku-4-5-20251001  # Cheaper/faster with Haiku
 ```
+
+The `run.py` runner uses the Claude API as an embedded medicinal chemist. It:
+1. Reads the current best molecule and its scores
+2. Asks Claude to propose ONE chemical modification (with strategy tag)
+3. Runs real AutoDock Vina docking on the proposed molecule
+4. Scores it, logs to `results.tsv`, and keeps it if improved
+5. Loops forever (or until `--max N` is hit)
+
+Every molecule is saved with timestamp, strategy, and full metrics. The current best is saved to `best.smi`. Full history goes to `history.jsonl`.
 
 ### Changing the Target Disease
 
